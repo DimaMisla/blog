@@ -1,0 +1,116 @@
+{% extends 'base/_base.html' %}
+{% load crispy_forms_filters %}
+{% load blog_filters %}
+
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="col-md-8 mx-auto mt-5">
+            <h1 class="mb-4">{{ post.title }}</h1>
+        </div>
+        <div class="text-center">
+            <img src="{{ post.image.url }}" alt="" class="img-fluid mx-auto d-block mb-3">
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <p class="card-text">{{ post.body|linebreaks }}</p>
+            </div>
+            <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+                <p class="mb-0">
+                    <i class="fas fa-user mx-1"></i>
+                    @{{ post.author }}
+                    - {{ post.create_at|date:"D d M Y" }}
+                    {% if post.author == request.user %}
+                    <a href="{% url 'blog:edit_post' slug=post.slug %} "><i class="fa-solid fa-pen-to-square fa-lg"></i></a>
+          {% endif %}
+                </p>
+                <div class="d-flex align-items-center ml-auto" id="postFooter">
+                    <div class="d-flex flex-row align-items-center text-primary">
+                        <div class="d-flex align-items-center mb-3 me-4">
+                            <a href="{% url 'blog:post_like_toggle' pk=post.pk %}" class="like-button me-1">
+                            {% if post|is_liked_by:request.user %}
+                                <i class="fas fa-thumbs-up ms-2"></i>
+                            {% else %}
+                                <i class="far fa-thumbs-up ms-2"></i>
+                            {% endif %}
+                            </a>
+                            <p class="small mb-0" id="likesCount">{{ post.likes.count }}</p>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <a href="{% url 'blog:post_dislike_toggle' pk=post.pk %}" class="like-button me-1">
+                            {% if post|is_disliked_by:request.user %}
+                                <i class="fa-solid fa-thumbs-down ms-2"></i>
+                            {% else %}
+                                <i class="fa-regular fa-thumbs-down ms-2"></i>
+                            {% endif %}
+                            </a>
+                            <p class="small mb-0" id="dislikesCount">{{ post.dislikes.count }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="col-lg-10"/>
+
+<section>
+    <div class="container my-5 py-5">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-12 col-lg-10">
+                <div class="col-5 mb-4">
+                    <form action="{% url 'blog:post_comment_create' post_pk=post.pk %}" method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button class="btn btn-info">Add</button>
+                    </form>
+                </div>
+
+                <div class="card text-dark">
+                    <div class="card-body p-4">
+                        <h4 class="mb-0">Recent comments</h4>
+                        <p class="fw-light mb-4 pb-2">Latest Comments section by users</p>
+                        {% for comment in post.comments.all %}
+                        <h6 class="fw-bold mb-1">{{ comment.author }}</h6>
+                        <div class="d-flex align-items-center mb-3">
+                            <p class="mb-0">
+                                March 07, 2021
+                                <span class="badge bg-primary">Pending</span>
+                            </p>
+                            <a href="#!" class="link-muted"><i class="fas fa-pencil-alt ms-2"></i></a>
+                            <a href="#!" class="link-muted"><i class="fas fa-redo-alt ms-2"></i></a>
+                            <a href="#!" class="link-muted comment-like-button"></a>
+                            <a href="{% url 'blog:comment_like_toggle' pk=post.pk comment_pk=comment.pk %}" class="like-button me-1">
+                            {% if comment|is_liked_by:request.user %}
+                                <i class="fas fa-thumbs-up ms-2"></i>
+                            {% else %}
+                                <i class="far fa-thumbs-up ms-2"></i>
+                            {% endif %}
+                            </a>
+                            <p class="small mb-0" id="likesCount">{{ comment.likes.count }}</p>
+
+                            <a href="{% url 'blog:comment_dislike_toggle' pk=post.pk comment_pk=comment.pk %}" class="like-button me-1">
+                            {% if comment|is_disliked_by:request.user %}
+                                <i class="fa-solid fa-thumbs-down ms-2"></i>
+                            {% else %}
+                                <i class="fa-regular fa-thumbs-down ms-2"></i>
+                            {% endif %}
+                            </a>
+                            <p class="small mb-0" id="likesCount">{{ comment.dislikes.count }}</p>
+                        </div>
+                        <p class="mb-0">
+                            {{ comment.body }}
+                        </p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+{% endblock %}

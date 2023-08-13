@@ -1,0 +1,12 @@
+{% extends 'base/_base.html' %}
+{% load crispy_forms_filters %}
+
+
+
+{% block content %}
+    <form action="{% url 'blog:toggle_edit_post' slug=post.slug %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button class="btn btn-info">Save</button>
+    </form>
+{% endblock %}

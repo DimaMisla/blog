@@ -1,0 +1,29 @@
+{% if items.has_other_pages %}
+  <p><strong>Page {{ items.number }} of {{ total_pages }} </strong></p>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      {% if items.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ items.previous_page_number }}{{ query_string }}">Previous</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ items.previous_page_number }}{{ query_string }}">{{ items.previous_page_number }}</a>
+        </li>
+      {% endif %}
+
+      <li class="page-item active">
+        <a class="page-link" href="?page={{ items.number }}{{ query_string }}">{{ items.number  }}</a>
+      </li>
+    {% if items.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ items.next_page_number }}{{ query_string }}">{{ items.next_page_number }}</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ items.next_page_number }}{{ query_string }}">Next</a>
+      </li>
+    {% endif %}
+
+    </ul>
+  </nav>
+{% endif %}

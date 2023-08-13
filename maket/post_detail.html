@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />  <title>Blog</title>
+</head>
+<body>
+<header class="p-3 bg-dark text-white">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+        <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+      </a>
+
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Categories
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
+                <li>
+                  <a class="dropdown-item" href="">
+                    USA
+                  </a>
+                </li>
+              <li>
+                  <a class="dropdown-item" href="">
+                    World
+                  </a>
+                </li>
+              <li>
+                  <a class="dropdown-item" href="">
+                    Nature
+                  </a>
+                </li>
+            </ul>
+          </li>
+        <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
+        <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
+        <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
+        <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+      </ul>
+
+      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+        <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
+      </form>
+
+      <div class="text-end">
+        <button type="button" class="btn btn-outline-light me-2">Login</button>
+        <button type="button" class="btn btn-warning">Sign-up</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="flex-shrink-0 p-3 bg-white float-end mt-5" style="width: 280px;">
+  <a href="/" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+    <svg class="bi me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+    <span class="fs-5 fw-semibold">Blog view options</span>
+  </a>
+  <ul class="list-unstyled ps-0">
+    <li class="mb-1">
+      <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+        Show by period
+      </button>
+      <div class="collapse show" id="home-collapse">
+        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+          <li><a href="">Show all posts</a></li>
+          <li>
+            <a href="">
+              Show today's posts
+            </a>
+          </li>
+          <li>
+            <a href="">
+              Show last 7 days posts
+            </a>
+          </li>
+          <li>
+            <a href="">
+              Show last 30 days posts
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
+    <li class="mb-1">
+        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+          Personal blog
+        </button>
+        <div class="collapse" id="dashboard-collapse" style="">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+            <li>
+              <a href="" class="link-dark rounded">
+                Add blog
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+  </ul>
+</div>
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-10">
+        <div class="col-md-8 mx-auto mt-5">
+            <h1 class="mb-4">Some title</h1>
+        </div>
+        <div class="text-center">
+            <img src="https://media.cnn.com/api/v1/images/stellar/prod/230429085317-01-messina-bridge-project.jpg?c=16x9&q=h_720,w_1280,c_fill/f_webp" alt="" class="img-fluid mx-auto d-block mb-3">
+        </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <p class="card-text"><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa incidunt neque qui quod, temporibus vel voluptatem. Aliquam autem blanditiis cum dicta distinctio ex obcaecati perferendis, quae vel veritatis! Excepturi, perferendis.</span><span>Ab deleniti dolore dolorem, est ex explicabo facilis harum impedit inventore ipsa labore laboriosam laudantium magni minima, minus nulla pariatur placeat quisquam similique tempora velit veniam voluptas. A, quasi, quos.</span><span>Dolor est ex expedita hic minus nihil non, officiis optio perferendis placeat quae quibusdam quis quod rerum temporibus, totam veritatis voluptas! Alias earum excepturi fuga molestiae nulla placeat quod, ut.</span><span>Accusamus animi aperiam aspernatur blanditiis culpa cumque cupiditate dolores ducimus eius eligendi ex explicabo impedit inventore ipsa itaque libero natus necessitatibus nobis quam quisquam rem repellat sunt temporibus voluptate, voluptatibus?</span><span>Adipisci, atque autem dolor harum inventore minus nesciunt nihil nulla possimus quibusdam quidem, recusandae vel voluptatum! Aut delectus, dicta earum, fugit incidunt inventore, labore laudantium magnam magni minima nemo vero.</span><span>Accusamus aperiam architecto aspernatur, aut dolorum eveniet explicabo, facilis fugiat neque nisi pariatur ratione sunt, veniam veritatis vero voluptas voluptatem! Eum excepturi minima tempore velit? Esse fuga fugit officia tempore.</span><span>Accusamus ad animi debitis dolor dolorem excepturi expedita, incidunt iusto libero modi, nemo neque possimus quo repellat veritatis? Ab asperiores, aspernatur et facere impedit iure minus molestiae natus odio veniam?</span><span>Ad adipisci atque dicta eaque eligendi eos et, fugit ipsam magni minima natus odio omnis quam quidem, tempore temporibus tenetur? Commodi doloribus excepturi inventore iusto saepe sint veniam vero voluptates.</span><span>Accusamus, ad aperiam consectetur cumque, in inventore magnam officiis quasi quibusdam quisquam saepe sapiente soluta, totam veritatis voluptates. Assumenda dolor id laudantium officia quisquam? Corporis cupiditate nostrum omnis pariatur sequi!</span><span>Debitis dolor eius fugiat fugit impedit incidunt itaque iure iusto perspiciatis sunt. Eaque ipsa numquam quae similique! A consectetur consequuntur corporis, ipsam magni omnis placeat praesentium quia recusandae repudiandae tempore!</span></p>
+        </div>
+        <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+          <p class="mb-0">
+              <i class="fas fa-user mx-1"></i>
+              @admin
+            - 17 February 2023
+          </p>
+          <div class="d-flex align-items-center ml-auto" id="postFooter">
+              <div class="d-flex flex-row align-items-center text-primary">
+                <p class="small mb-0">Unlike</p>
+                <a href="">
+                  <i class="fas fa-thumbs-up mx-2 fa-xs" style="margin-top: -0.16rem;"></i>
+                </a>
+                <p class="small mb-0">10</p>
+              </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+<div class="row d-flex justify-content-center">
+  <div class="col-md-8 col-lg-6">
+          <h1>Comments</h1>
+    <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+      <div class="card-body p-4">
+        <div class="form-outline mb-4" id="comments">
+          <form method="post">
+              <label for="" class="form-label">
+                <strong><i>Add comment</i></strong>
+              </label>
+            <input type="text" size="60">
+            <button type="submit" class="btn btn-info mt-2">Add</button>
+          </form>
+        </div>
+        <hr>
+            <div class="card mb-4" id="">
+              <div class="card-body">
+                  <a href="" class="text-decoration-none">
+                      <button class="btn-sm btn-warning ms-auto">Disabled</button>
+                      <button class="btn-sm btn-success ms-auto">Enabled</button>
+                  </a>
+                  <a href="" class="text-decoration-none">
+                    <button class="btn-sm btn-danger ms-auto">Delete</button>
+                  </a>
+                  <hr>
+
+                <p class="small text-muted mb-2">added 3 days ago</p>
+
+                  <div class="d-flex flex-row align-items-center">
+                    <p>Comment 1</p>
+                  </div>
+
+                <div class="d-flex justify-content-between">
+                  <div class="d-flex flex-row align-items-center">
+                      <i class="fas fa-user mx-1"></i>
+                      <p class="small mb-0 ms-2">@user1</p>
+                  </div>
+
+                  <div class="d-flex flex-row align-items-center text-primary">
+                    <p class="small mb-0">Unlike</p>
+                      <a href="">
+                        <i class="fas fa-thumbs-up mx-2 fa-xs" style="margin-top: -0.16rem;"></i>
+                      </a>
+                    <p class="small mb-0">10</p>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+        <hr>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer class="text-center text-lg-start bg-light text-muted fixed-bottom mt-5">
+  <!-- Section: Social media -->
+  <section class="d-flex justify-content-center p-3 border-bottom container">
+    <!-- Left -->
+    <div class="me-5 d-none d-lg-block">
+      <span>Get connected with us on social networks:</span>
+    </div>
+    <!-- Left -->
+
+    <!-- Right -->
+    <div>
+      <a href="" class="me-4 text-reset">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="" class="me-4 text-reset">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="" class="me-4 text-reset">
+        <i class="fab fa-google"></i>
+      </a>
+      <a href="" class="me-4 text-reset">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="" class="me-4 text-reset">
+        <i class="fab fa-linkedin"></i>
+      </a>
+      <a href="" class="me-4 text-reset">
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <!-- Right -->
+  </section>
+  <!-- Section: Social media -->
+
+  <!-- Copyright -->
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+    © <span id="footerYear"></span> Copyright by
+    <a class="text-reset fw-bold" href="#">Wspjoy</a>
+  </div>
+  <!-- Copyright -->
+</footer>
+<!-- Footer -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

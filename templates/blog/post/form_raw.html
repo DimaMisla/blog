@@ -1,0 +1,35 @@
+{% extends 'base/_base.html' %}
+
+{% block title %}
+  Send data to server
+{% endblock title %}
+
+
+{% block content %}
+  <h1>Form</h1>
+  <div class="col-6">
+    {% if error %}
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+    {% endif %}
+
+    <form action="" method="post">
+      {% csrf_token %}
+      <label for="comment__input-one">Comment one</label>
+      <input type="text"
+             class="form-control mt-2 mb-3"
+             id="comment__input-one"
+             name="comment"
+             required>
+
+      <label for="comment__input-two">Comment second</label>
+      <input type="text"
+             class="form-control mt-2 mb-3"
+             id="comment__input-two"
+             name="comment">
+
+      <button type="submit" class="btn btn-info">Add</button>
+    </form>
+  </div>
+{% endblock content %}
