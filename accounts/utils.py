@@ -7,8 +7,8 @@ def send_email(recipients):
     code = random.randint(1000, 9999)
     subject = "email confirmation"
     body = f"email code {code}"
-    sender = "stavpfarabober@gmail.com"
-    password = "z1x2c3v4b5n6m7"
+    sender = "email"
+    password = "password"
 
     msg = MIMEText(body)
     msg['Subject'] = subject.encode('utf-8')
