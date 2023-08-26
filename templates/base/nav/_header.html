@@ -22,8 +22,8 @@
           <a class="btn btn-outline-light me-2" href="{% url 'accounts:login' %}">Login</a>
           <a class="btn btn-outline-light me-2" href="{% url 'accounts:register' %}">Sign Up</a>
         {% else %}
-            <a href="{% url 'accounts:profile' user_pk=request.user.pk %} ">
-                <strong class="me-2">{{ request.user }}</strong>
+            <a class="btn btn-outline-light me-2"  href="{% url 'accounts:profile' pk=request.user.pk %} " >
+                {{ request.user }}
             </a>
           <a class="btn btn-outline-light me-2" href="{% url 'accounts:logout' %}">Logout</a>
         {% endif %}

@@ -1,4 +1,5 @@
 {% extends "base/_base.html" %}
+{% load accounts_filters %}
 
 
 {% block content %}
@@ -13,10 +14,12 @@
               <img src="{{ profile.avatar }}"
                 alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
                 style="width: 150px; z-index: 1">
+                {% if request.user == profile.user %}
               <a href="{% url "accounts:edit_profile" pk=profile.user.pk %}" type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
                 style="z-index: 1;">
                 Edit profile
               </a>
+                {% endif %}
             </div>
             <div class="ms-3" style="margin-top: 130px;">
               <h5>{{ profile.user.username }}</h5>
@@ -24,17 +27,26 @@
             </div>
           </div>
           <div class="p-4 text-black" style="background-color: #f8f9fa;">
+              {% if request.user != profile.user %}
+                {% if profile|subscribe:request.user %}
+                    <a href="{% url 'accounts:unsubscribe' pk=profile.user.pk %}" type="submit" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
+                style="z-index: 1;">Unsubscribe</a>
+            {% else %}
+                     <a href="{% url 'accounts:subscribe' pk=profile.user.pk %}" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
+                style="z-index: 1;">Subscribe</a>
+            {% endif %}
+        {% endif %}
             <div class="d-flex justify-content-end text-center py-1">
               <div>
                 <p class="mb-1 h5">{{ user_posts.all.count }}</p>
                 <p class="small text-muted mb-0">Posts</p>
               </div>
               <div class="px-3">
-                <p class="mb-1 h5">1026</p>
+                <p class="mb-1 h5">{{ profile.subscription.count }}</p>
                 <p class="small text-muted mb-0">Followers</p>
               </div>
               <div>
-                <p class="mb-1 h5">478</p>
+                <p class="mb-1 h5">{{ profile.user.subscription.count }}</p>
                 <p class="small text-muted mb-0">Following</p>
               </div>
             </div>

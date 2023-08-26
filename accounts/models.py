@@ -31,9 +31,27 @@ class Profile(models.Model):
         gravatar_url = f'https://www.gravatar.com/avatar/{md5_hash}?d=identicon&s={200}'
         self.avatar = gravatar_url
 
+    def subscribe(self, user) -> bool:
+        return ProfileSubscription.objects.filter(profile=self, user=user).exists()
+
+    def unsubscribe(self, user):
+        ProfileSubscription.objects.filter(user=user, profile=self).exists()
+
     def save(self, *args, **kwargs):
         if not self.pk:
             super().save(*args, **kwargs)
         if not self.avatar:
             self.create_avatar()
         super().save(*args, **kwargs)
+
+
+class ProfileSubscription(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subscription')
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='subscription')
+    create_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'profile')
+
+    def __str__(self):
+        return f'{self.user} - {self.profile}'

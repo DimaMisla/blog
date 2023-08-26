@@ -1,28 +1,33 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
 from django.views.decorators.http import require_http_methods
 
-from accounts.forms import DefaultProfileForm, CustomUserCreationForm, EditProfileForm
-from accounts.models import Profile
+from accounts.forms import DefaultProfileForm, CustomUserCreationForm, EditProfileForm, CustomAuthenticationForm
+from accounts.models import Profile, ProfileSubscription
 from blog.models import Post
 
 from datetime import datetime, date
 
 
+User = get_user_model()
+
 def login_request(request):
-    form = AuthenticationForm()
+    form = CustomAuthenticationForm()
 
     if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
+        form = CustomAuthenticationForm(request.POST)
         if form.is_valid():
-            user = authenticate(**form.cleaned_data)
-            if user is not None:
-                login(request, user)
-                return redirect("blog:home")
-
+            try:
+                user = get_object_or_404(User, email=form.cleaned_data['email'])
+                if user.check_password(form.cleaned_data['password']):
+                    login(request, user)
+                    return redirect("blog:home")
+            except User.DoesNotExist:
+                return render(request=request, template_name="accounts/login.html", context={"form": form})
     return render(request=request, template_name="accounts/login.html", context={"form": form})
 
 
@@ -57,12 +62,12 @@ def register(request):
     return render(request, 'accounts/registration.html', context)
 
 
-def profile(request, user_pk):
-    user_profile = Profile.objects.get(user=user_pk)
-    user_posts = Post.objects.filter(author=user_pk)
+def profile(request, pk):
+    user_profile = get_object_or_404(Profile, user=pk)
+    user_posts = Post.objects.filter(author=pk)
     context = {
         'profile': user_profile,
-        'user_posts': user_posts
+        'user_posts': user_posts,
     }
     return render(request, 'accounts/profile/profile.html', context)
 
@@ -78,9 +83,24 @@ def edit_profile(request, pk):
         form = EditProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('accounts:profile', user_pk=pk)
+            return redirect('accounts:profile', pk=pk)
     else:
         form = EditProfileForm(instance=profile)
 
     return render(request, 'accounts/profile/edit_profile.html', {'form': form, 'profile': profile})
+
+
+@login_required
+def toggle_subscribe(request, pk):
+    profile_user = get_object_or_404(Profile, user=pk)
+    if profile_user.user == request.user:
+        return redirect('accounts:profile', pk=pk)
+    profile_subscription, created = ProfileSubscription.objects.get_or_create(
+        user=request.user,
+        profile=profile_user,
+    )
+    if not created:
+        profile_subscription.delete()
+
+    return redirect('accounts:profile', pk=pk)
 
