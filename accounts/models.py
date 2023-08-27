@@ -1,9 +1,31 @@
 import hashlib
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-User = get_user_model()
+from accounts.managers import CustomUserManager
+from accounts.validators import validate_username, validate_name, validate_birth_date
+
+
+class CustomUser(AbstractUser):
+    username = models.CharField(max_length=30, unique=True, validators=[validate_username])
+    email = models.EmailField(unique=True, max_length=255)
+    first_name = models.CharField(max_length=50, validators=[validate_name])
+    last_name = models.CharField(max_length=50, validators=[validate_name])
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+
+    objects = CustomUserManager()
+
+    def __str__(self):
+        return self.username
+
+    def save(self, *args, **kwargs):
+        self.first_name = self.first_name.capitalize()
+        self.last_name = self.last_name.capitalize()
+        self.username = self.username.lower()
+        super().save(*args, **kwargs)
 
 
 class Profile(models.Model):
@@ -12,7 +34,7 @@ class Profile(models.Model):
         ('female', 'Female'),
     )
 
-    user = models.OneToOneField(User,
+    user = models.OneToOneField(CustomUser,
                                 on_delete=models.CASCADE,
                                 related_name='profile')
     avatar = models.URLField(max_length=255, blank=True)
@@ -46,7 +68,7 @@ class Profile(models.Model):
 
 
 class ProfileSubscription(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subscription')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='subscription')
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='subscription')
     create_at = models.DateTimeField(auto_now_add=True)
 

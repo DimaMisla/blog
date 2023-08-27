@@ -1,65 +1,48 @@
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.views import LoginView, LogoutView
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views import View
-from django.views.decorators.http import require_http_methods
+from django.urls import reverse_lazy
+from django.views.generic import FormView
 
-from accounts.forms import DefaultProfileForm, CustomUserCreationForm, EditProfileForm, CustomAuthenticationForm
+from accounts.forms import DefaultProfileForm, EditProfileForm, RegisterForm, ProfileForm
 from accounts.models import Profile, ProfileSubscription
 from blog.models import Post
-
-from datetime import datetime, date
 
 
 User = get_user_model()
 
-def login_request(request):
-    form = CustomAuthenticationForm()
 
-    if request.method == "POST":
-        form = CustomAuthenticationForm(request.POST)
-        if form.is_valid():
-            try:
-                user = get_object_or_404(User, email=form.cleaned_data['email'])
-                if user.check_password(form.cleaned_data['password']):
-                    login(request, user)
-                    return redirect("blog:home")
-            except User.DoesNotExist:
-                return render(request=request, template_name="accounts/login.html", context={"form": form})
-    return render(request=request, template_name="accounts/login.html", context={"form": form})
+class UserLoginView(LoginView):
+    template_name = 'accounts/login.html'
+    success_url = reverse_lazy('blog:home')
+
+    def get_success_url(self):
+        return self.success_url
 
 
-def logout_request(request):
-    logout(request)
-    return redirect("blog:home")
+class CustomLogoutView(LogoutView):
+    next_page = reverse_lazy('accounts:login')
 
 
-def register(request):
-    form = CustomUserCreationForm()
-    profile_form = DefaultProfileForm()
-    today = date.today()
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        profile_form = DefaultProfileForm(request.POST)
+class RegisterView(FormView):
+    template_name = 'accounts/registration.html'
+    form_class = RegisterForm
+    success_url = reverse_lazy('blog:home')
 
-        if form.is_valid() and profile_form.is_valid():
-            profile = profile_form.save(commit=False)
 
-            age = today.year - profile.date_of_birth.year - ((today.month, today.day) < (profile.date_of_birth.month, profile.date_of_birth.day))
-            if age < 18:
-                return render(request, 'accounts/registration.html', context={"form": form, "profile_form": profile_form})
+class ProfileCreateView(FormView):
+    template_name = 'accounts/profile/profile_create.html'
+    form_class = ProfileForm
+    success_url = reverse_lazy('blog:home')
 
-            user = form.save()
-            profile.user = user
-            profile.bio = " "
-            profile.info = " "
-            profile.save()
-            return redirect("accounts:login")
-
-    context = {"form": form, "profile_form": profile_form, "years": range(1900, today.year)}
-    return render(request, 'accounts/registration.html', context)
+    def form_valid(self, form):
+        profile = form.save(commit=False)
+        profile.user = self.request.user
+        profile.save()
+        return super().form_valid(form)
 
 
 def profile(request, pk):

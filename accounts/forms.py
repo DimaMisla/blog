@@ -1,10 +1,18 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
+from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 
 from accounts.models import Profile
+from accounts.validators import validate_birth_date
 from blog.validators import validate_file_size
+
+User = get_user_model()
+
+
+class DateInputCustom(forms.DateInput):
+    input_type = 'date'
 
 
 class DefaultProfileForm(forms.ModelForm):
@@ -38,18 +46,38 @@ class EditProfileForm(forms.ModelForm):
     info = forms.CharField(required=False)
 
 
-class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(label="Email", required=True)
-
+class RegisterForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ("username", "email", "password1", "password2")
+        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
 
 
-class CustomAuthenticationForm(forms.ModelForm):
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'E-Mail..'}), label='E-Mail')
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password..'}), label='Password')
-
+class ProfileForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ['email', 'password']
+        model = Profile
+        fields = ('gender', 'date_of_birth', 'avatar', 'bio', 'info')
+
+        labels = {
+            'date_of_birth': 'Date of your Birth',
+            'avatar': 'Avatar URL'
+        }
+
+        placeholders = {
+            'avatar': 'Left empty to use gravatar',
+            'bio': 'Write a short biography',
+            'info': 'Enter some additional information'
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({'placeholder': self.Meta.placeholders.get(field_name)})
+        self.fields['date_of_birth'].widget = DateInputCustom()
+
+    def clean_date_of_birth(self):
+        data = self.cleaned_data['date_of_birth']
+        try:
+            validate_birth_date(data)
+        except ValidationError as exception:
+            self.add_error('date_of_birth', str(exception))
+        return data
