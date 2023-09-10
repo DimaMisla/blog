@@ -5,6 +5,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import FormView
 
 from accounts.forms import DefaultProfileForm, EditProfileForm, RegisterForm, ProfileForm
@@ -45,14 +46,15 @@ class ProfileCreateView(FormView):
         return super().form_valid(form)
 
 
-def profile(request, pk):
-    user_profile = get_object_or_404(Profile, user=pk)
-    user_posts = Post.objects.filter(author=pk)
-    context = {
-        'profile': user_profile,
-        'user_posts': user_posts,
-    }
-    return render(request, 'accounts/profile/profile.html', context)
+class ProfileView(View):
+    def get(self, request, pk):
+        user_profile = get_object_or_404(Profile, user=pk)
+        user_posts = Post.objects.filter(author=pk)
+        context = {
+            'profile': user_profile,
+            'user_posts': user_posts,
+        }
+        return render(request, 'accounts/profile/profile.html', context)
 
 
 @login_required

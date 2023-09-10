@@ -14,11 +14,15 @@
 </head>
 <body>
 {% include 'base/nav/_header.html' %}
+<div class="row flex-nowrap">
+  {% include 'base/nav/_sidebar.html' %}
 
-<div class="container mt-5">
-  {% block content %}
-  {% endblock content %}
+  <div class="container mt-5 col-9">
+    {% block content %}
+    {% endblock content %}
+  </div>
 </div>
+
 
 <div class="divider"></div>
 

@@ -1,0 +1,20 @@
+{% extends 'base/_base.html' %}
+
+{% block content %}
+    <div class="container">
+    {% for city in cities %}
+         <div class="row">
+    <div class="col">
+
+        <a class="btn btn-outline-dark" href="{% url 'weather:widget' %}?city={{ city.city }}">{{ city.city }}</a>
+        <a href="{% url 'weather:delete' slug=city.city %}" class="btn btn-outline-danger">Delete</a>
+    </div>
+  </div>
+{% endfor %}
+
+
+</div>
+<div class="text-center">
+<a href="{% url 'weather:add' %}" class="btn btn-info mt-3">Add</a>
+</div>
+{% endblock %}

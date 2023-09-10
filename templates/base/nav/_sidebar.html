@@ -1,0 +1,31 @@
+<div class="flex-shrink-0 mt-2 ms-2 bg-white col-2">
+  <form action="" method="get">
+    <h2 class="grid-title"><i class="fa fa-filter"></i> Filters</h2>
+    <hr>
+    <h4>By users</h4>
+    <label for="user">User</label>
+    <select class="form-select" name="user" id="user">
+      <option value="" selected>Select user</option>
+      {% for user in users %}
+        <option value="{{ user.username }}">{{ user.username }}</option>
+      {% endfor %}
+    </select>
+    <h4>By category:</h4>
+    {% for category in categories %}
+      <div class="form-check">
+        <label for="category_{{ category.id }}" class="form-check-label">
+          {{ category.name }}
+        </label>
+        <input class="form-check-input"
+               id="category_{{ category.id }}"
+               type="checkbox" name="categories"
+               value="{{ category.name }}">
+      </div>
+    {% endfor %}
+    <div class="padding"></div>
+    <h4>By date:</h4>
+    <label for="date_end">From</label>
+    <input type="date" class="form-control" name="date_end" id="date_end">
+    <button type="submit" class="btn btn-info mt-3">Search</button>
+  </form>
+</div>

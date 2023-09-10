@@ -1,32 +1,75 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_http_methods
+from django.views.generic import ListView
 
-from .models import Post, Comment, PostLike, PostDislike, CommentDislike, CommentLike
+from .models import Post, Comment, PostLike, PostDislike, CommentDislike, CommentLike, Category
 from .forms import CommentForm, PostForm
 from .utils import paginate_queryset, get_request_params
 
+User = get_user_model()
 
-def home(request):
-    per_page = 4
 
-    page = request.GET.get('page', 1)
-    per_page = request.GET.get('per_page', per_page)
+class PostListView(ListView):
+    model = Post
+    template_name = 'blog/post/list.html'
+    context_object_name = 'posts'
+    paginate_by = 4
 
-    queryset = Post.objects.all()
-    posts, total_pages = paginate_queryset(queryset, page, per_page)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        categories = self.request.GET.getlist('categories')
+        date_end = self.request.GET.get('date_end', None)
+        user = self.request.GET.get('user', None)
 
-    query_string = get_request_params(request)
+        if user:
+            queryset = queryset.filter(author__username=user)
 
-    context = {
-        'title': 'Home page',
-        'maintainer': 'dima misla',
-        'posts': posts,
-        'total_pages': total_pages,
-        'query_string': query_string
-    }
-    return render(request, 'blog/post/list.html', context)
+        if categories:
+            queryset = queryset.filter(category__name__in=categories)
+
+        if date_end:
+            queryset = queryset.filter(update_at__gte=date_end)
+
+        keyword = self.request.GET.get('keyword', )
+        if keyword:
+            queryset = queryset.filter(title__icontains=keyword)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        per_page = self.request.GET.get('per_page', self.paginate_by)
+        paginator = Paginator(context['posts'], per_page)
+        page = self.request.GET.get('page', 1)
+        posts = paginator.get_page(page)
+        query_string = self.request.GET.urlencode()
+
+        context.update({
+            'title': 'Home page',
+            'posts': posts,
+            'total_pages': paginator.num_pages,
+            'query_string': query_string,
+
+        })
+
+        return context
+
+
+class PostSearchView(PostListView):
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.GET.get_context('search', )
+
+        if search_query:
+            queryset = queryset.filter(Q(title__icontains=search_query) | Q(body__icontains=search_query))
+
+        return queryset
 
 
 def post_detail(request, slug):
@@ -169,3 +212,12 @@ def toggle_comment_dislike(request, pk, comment_pk):
     return redirect('blog:post_detail', slug=comment.post.slug)
 
 
+# def search_posts(request):
+#     if request.method == 'GET':
+#         search_query = request.GET.get('search', '')
+#         post = Post.objects.filter(title__icontains=search_query)
+#         first_post = post.first()
+#         if post:
+#             return redirect('blog:post_detail', slug=first_post.slug)
+#
+#     return redirect('blog:home')
